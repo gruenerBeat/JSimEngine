@@ -9,9 +9,8 @@ public class Transform extends Property{
     public Vector rotation;
     public Vector scale;
 
-    public Transform(int id) {
-        name = "Transform";
-        this.id = id;
+    public Transform() {
+        super("Transform", PropertyType.TRANSFORM);
         position = new Vector(3);
         rotation = new Vector(3);
         scale = new Vector(3);
@@ -41,4 +40,6 @@ public class Transform extends Property{
         scale = Vector.hadamard(scale, a);
     }
 
+    @Override
+    public void instantiate() {}
 }

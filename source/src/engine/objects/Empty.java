@@ -5,8 +5,8 @@ import engine.types.Object;
 
 public class Empty extends Object{
     
-    public Empty() {
-        super("Transform");
+    public Empty(String name) {
+        super(name);
         properties.add(new Transform(propertyCount));
         propertyCount++;
     }
