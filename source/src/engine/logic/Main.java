@@ -1,20 +1,19 @@
 package engine.logic;
 
 import engine.display.GameWindow;
-import engine.libs.types.Color.ColorType;
-import engine.libs.types.Color.HSV;
+import engine.objects.Camera;
 import engine.rendering.RayTracing;
 import engine.rendering.RenderType;
 import engine.rendering.Renderer;
 import engine.rendering.Software;
 import engine.types.GameInitializer;
+import engine.types.World;
 import game.Game;
 
 public class Main {
 
     private static String name;
     private static RenderType rendering;
-    private static ColorType color;
     private static GameWindow window;
     private static boolean running;
     private static int targetFPS;
@@ -27,7 +26,7 @@ public class Main {
     private static double actualTPS;
     private static long gameRunningTime = 0;
     private static double mspt;
-    private static Renderer<?> renderer;
+    private static Renderer renderer;
 
     public void main(String[] args) {
 
@@ -37,24 +36,24 @@ public class Main {
         name = gi.name;
         rendering = gi.rt;
         targetFPS = gi.targetFPS;
-        color = gi.colorType;
         targetTPS = gi.targetTPS;
 
-        Object colorObj;
-
-        switch(rendering) {
-            case SOFTWARE:
-                renderer = new Software<>(gi.screenWidth, gi.screenHeight);
-                break;
-            case RAY_TRACING:
-                renderer = new RayTracing<>(gi.screenWidth, gi.screenHeight);
-                break;
-        }
+        World.changeWorld(new World("Default"));
+        Camera.changeCamera(new Camera("Main Camera"));
 
         running = true;
         window = new GameWindow(name, gi.screenWidth, gi.screenHeight);
 
-        RenderClock rendererClock = new RenderClock();
+        switch (rendering) {
+            case SOFTWARE:
+                renderer = new Software(gi.screenWidth, gi.screenHeight);
+                break;
+            case RAY_TRACING:
+                renderer = new RayTracing(gi.screenWidth, gi.screenHeight);
+                break;
+        }
+
+        RenderClock rendererClock = new RenderClock(renderer);
         GameClock gameClock = new GameClock();
 
         rendererClock.start();
@@ -67,10 +66,6 @@ public class Main {
     
     public static double getActualTPS() {
         return actualTPS;
-    }
-
-    public static ColorType getColor() {
-        return color;
     }
 
     public static double getDeltaTime() {

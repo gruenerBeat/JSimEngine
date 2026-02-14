@@ -25,7 +25,6 @@ public class GameWindow extends JFrame {
         setVisible(true);
     }
 
-    @SuppressWarnings("rawtypes")
     public void Draw(Texture t) {
         if(t.getWidth() != getWidth() || t.getHeight() != getHeight()) return;
 

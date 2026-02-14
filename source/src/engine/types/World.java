@@ -20,6 +20,7 @@ public class World {
     }
 
     public static boolean changeWorld(World w) {
+        current = w;
         return false;
     }
 

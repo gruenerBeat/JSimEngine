@@ -2,17 +2,16 @@ package engine.libs.types;
 
 import engine.libs.types.Color.Color;
 
-public class Texture<T extends Color> {
+public class Texture {
     
     private int width;
     private int height;
-    private T[][] pixels;
+    private Color[][] pixels;
 
-    @SuppressWarnings("unchecked")
     public Texture(int width, int height) {
         this.width = width;
         this.height = height;
-        pixels = (T[][])new Object[width][height];
+        pixels = new Color[width][height];
     }
 
     public int getWidth() {
@@ -23,15 +22,15 @@ public class Texture<T extends Color> {
         return height;
     }
 
-    public T[][] getPixels() {
+    public Color[][] getPixels() {
         return pixels;
     }
 
-    public T getPixelAt(int x, int y) {
+    public Color getPixelAt(int x, int y) {
         return pixels[x][y];
     }
 
-    public void setPixelAt(int x, int y, T value) {
+    public void setPixelAt(int x, int y, Color value) {
         pixels[x][y] = value;
     }
 }
