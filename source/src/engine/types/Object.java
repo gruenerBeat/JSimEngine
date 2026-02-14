@@ -51,6 +51,24 @@ public abstract class Object {
         return properties.get(0);
     }
 
+    public boolean hasProperty(PropertyType type) {
+        for(Property p : properties) {
+            if(p.getType() == type) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasProperty(String name) {
+        for(Property p : properties) {
+            if(p.getName() == name) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void removeProperty(String name) {
         for(Property p : properties) {
             if(p.getName() == name) {

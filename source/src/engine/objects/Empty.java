@@ -7,7 +7,6 @@ public class Empty extends Object{
     
     public Empty(String name) {
         super(name);
-        properties.add(new Transform(propertyCount));
-        propertyCount++;
+        addProperty(new Transform());
     }
 }

@@ -1,22 +1,131 @@
 package engine.logic;
 
-import engine.types.World;
+import engine.display.GameWindow;
+import engine.libs.types.Color.ColorType;
+import engine.libs.types.Color.HSV;
+import engine.rendering.RayTracing;
+import engine.rendering.RenderType;
+import engine.rendering.Renderer;
+import engine.rendering.Software;
+import engine.types.GameInitializer;
 import game.Game;
 
 public class Main {
-    
-    public static boolean running;
-    public static long frame;
 
-    public static void main(String[] args) {
+    private static String name;
+    private static RenderType rendering;
+    private static ColorType color;
+    private static GameWindow window;
+    private static boolean running;
+    private static int targetFPS;
+    private static double actualFPS;
+    private static long frame;
+    private static long gameTime;
+    private static double deltaTime;
+    private static long runningTime = 0;
+    private static int targetTPS;
+    private static double actualTPS;
+    private static long gameRunningTime = 0;
+    private static double mspt;
+    private static Renderer<?> renderer;
+
+    public void main(String[] args) {
+
+        Game game = new Game();
+        GameInitializer gi = game.register();
         
-        if(!Game.game) return;
-        Game.start();
-        running = true;
+        name = gi.name;
+        rendering = gi.rt;
+        targetFPS = gi.targetFPS;
+        color = gi.colorType;
+        targetTPS = gi.targetTPS;
 
-        while (running) {
-            World.getCurrent().tick();
-            frame++;
+        Object colorObj;
+
+        switch(rendering) {
+            case SOFTWARE:
+                renderer = new Software<>(gi.screenWidth, gi.screenHeight);
+                break;
+            case RAY_TRACING:
+                renderer = new RayTracing<>(gi.screenWidth, gi.screenHeight);
+                break;
         }
+
+        running = true;
+        window = new GameWindow(name, gi.screenWidth, gi.screenHeight);
+
+        RenderClock rendererClock = new RenderClock();
+        GameClock gameClock = new GameClock();
+
+        rendererClock.start();
+        gameClock.start();
+    }
+
+    public static double getActualFPS() {
+        return actualFPS;
+    }
+    
+    public static double getActualTPS() {
+        return actualTPS;
+    }
+
+    public static ColorType getColor() {
+        return color;
+    }
+
+    public static double getDeltaTime() {
+        return deltaTime;
+    }
+
+    public static long getFrame() {
+        return frame;
+    }
+
+    public static long getGameTime() {
+        return gameTime;
+    }
+
+    public static double getMspt() {
+        return mspt;
+    }
+
+    public static String getName() {
+        return name;
+    }
+
+    public static RenderType getRendering() {
+        return rendering;
+    }
+
+    public static int getTargetFPS() {
+        return targetFPS;
+    }
+
+    public static int getTargetTPS() {
+        return targetTPS;
+    }
+
+    public static GameWindow getWindow() {
+        return window;
+    }
+
+    public static boolean isRunning() {
+        return running;
+    }
+
+    public static void frameTicked() {
+        frame++;
+        long time = System.nanoTime() / 1000000;
+        deltaTime = time - runningTime;
+        runningTime = time;
+        actualFPS = (double)1000 / deltaTime;
+    }
+
+    public static void gameTicked() {
+        gameTime++;
+        long time = System.nanoTime() / 1000000;
+        mspt = time - gameRunningTime;
+        gameRunningTime = time;
+        actualTPS = (double)1000 / mspt;
     }
 }
