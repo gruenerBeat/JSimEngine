@@ -11,7 +11,9 @@ import java.awt.image.BufferedImage;
 
 public class GameWindow extends JFrame {
 
-    public GameWindow(String name, int width, int height) {
+    private static GameWindow gameWindow;
+
+    private GameWindow(String name, int width, int height) {
         setTitle(name);
         setSize(width, height);
         setResizable(false);
@@ -23,6 +25,17 @@ public class GameWindow extends JFrame {
 
         add(panel);
         setVisible(true);
+    }
+
+    public static GameWindow getInstance(String name, int width, int height) {
+        if(gameWindow == null) {
+            gameWindow = new GameWindow(name, width, height);
+        }
+        return gameWindow;
+    }
+
+    public static GameWindow getInstance() {
+        return gameWindow;
     }
 
     public void Draw(Texture t) {

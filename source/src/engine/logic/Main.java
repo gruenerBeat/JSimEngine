@@ -1,11 +1,11 @@
 package engine.logic;
 
+import java.lang.reflect.Method;
+
 import engine.display.GameWindow;
 import engine.objects.Camera;
-import engine.rendering.RayTracing;
 import engine.rendering.RenderType;
 import engine.rendering.Renderer;
-import engine.rendering.Software;
 import engine.types.GameInitializer;
 import engine.types.World;
 import game.Game;
@@ -42,15 +42,16 @@ public class Main {
         Camera.changeCamera(new Camera("Main Camera"));
 
         running = true;
-        window = new GameWindow(name, gi.screenWidth, gi.screenHeight);
+        window = GameWindow.getInstance(name, gi.screenWidth, gi.screenHeight);
 
-        switch (rendering) {
-            case SOFTWARE:
-                renderer = new Software(gi.screenWidth, gi.screenHeight);
-                break;
-            case RAY_TRACING:
-                renderer = new RayTracing(gi.screenWidth, gi.screenHeight);
-                break;
+        try {
+            Class<?>[] renderParams = {int.class, int.class};
+            Method renderClass = rendering.getRenderClass().getMethod("getInstance", renderParams);
+            renderer = (Renderer)renderClass.invoke(null, gi.screenWidth, gi.screenHeight);
+        } catch(Exception e) {
+            e.printStackTrace();
+            System.out.println("Couldn't create Renderer!");
+            return;
         }
 
         RenderClock rendererClock = new RenderClock(renderer);

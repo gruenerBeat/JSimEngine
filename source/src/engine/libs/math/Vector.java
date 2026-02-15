@@ -10,6 +10,11 @@ public class Vector {
         val = new double[size];
     }
 
+    public Vector(double[] val) {
+        this.val = val;
+        size = val.length;
+    }
+
     public int getSize() {
         return size;
     }

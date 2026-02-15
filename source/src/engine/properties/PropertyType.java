@@ -3,5 +3,6 @@ package engine.properties;
 public enum PropertyType {
     TRANSFORM,
     BEHAVIOUR,
-    CAMERA
+    CAMERA,
+    MESH_RENDERER
 }

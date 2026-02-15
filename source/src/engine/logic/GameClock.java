@@ -1,7 +1,7 @@
 package engine.logic;
 
 public class GameClock extends Thread {
-    
+
     @Override
     public void run() {
         while (Main.isRunning()) {

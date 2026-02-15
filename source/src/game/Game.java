@@ -11,8 +11,8 @@ public class Game extends GameRegister {
         GameInitializer init = new GameInitializer();
         init.name = "Test-Game";
         init.rt = RenderType.SOFTWARE;
-        init.screenWidth = 800;
-        init.screenHeight = 800;
+        init.screenWidth = 1280;
+        init.screenHeight = 720;
         init.targetFPS = 20;
         init.targetTPS = 20;
         return init;
