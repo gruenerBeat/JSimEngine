@@ -21,8 +21,8 @@ public class Camera extends Object{
         }
     }
 
-    public Camera(String name) {
+    public Camera(String name, double fov, int sensorDimension, double aspectRatio) {
         super(name);
-        addProperty(new CameraProperty());
+        addProperty(new CameraProperty(fov, sensorDimension, aspectRatio));
     }
 }

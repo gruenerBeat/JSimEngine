@@ -20,6 +20,7 @@ public abstract class Object {
 
     public void addProperty(Property p) {
         p.setId(propertyCount);
+        p.setParent(this);
         properties.add(p);
         propertyCount++;
     }
@@ -93,9 +94,15 @@ public abstract class Object {
         }
     }
 
-    public void instantiate() {
+    public void initialize() {
         for(Property p : properties) {
-            p.instantiate();
+            p.initialize();
+        }
+    }
+
+    public void tick() {
+        for(Property p : properties) {
+            p.tick();
         }
     }
 }

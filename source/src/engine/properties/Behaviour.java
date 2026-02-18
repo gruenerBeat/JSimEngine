@@ -12,7 +12,12 @@ public abstract class Behaviour extends Property {
     public abstract void run();
 
     @Override
-    public void instantiate() {
+    public void initialize() {
         init();
+    }
+
+    @Override
+    public void tick() {
+        run();
     }
 }

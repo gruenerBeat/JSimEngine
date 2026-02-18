@@ -15,10 +15,6 @@ public class RenderClock extends Thread {
     @Override
     public void run() {
         while (Main.isRunning()) {
-
-            Main.getWindow().Draw(renderer.render(Camera.getCurrent(), World.getCurrent()));
-
-            Main.frameTicked();
             try {
                 if(Main.getTargetFPS() <= Main.getActualFPS()) {
                     Thread.sleep((int)(1000 / Main.getTargetFPS()));
@@ -26,6 +22,9 @@ public class RenderClock extends Thread {
                     Thread.sleep((int)((1000 * Main.getActualFPS()) / Math.pow(Main.getTargetFPS(), 2)));
                 }
             } catch (InterruptedException e) {}
+
+            Main.getWindow().Draw(renderer.render(Camera.getCurrent(), World.getCurrent()));
+            Main.frameTicked();
         }
     }
 }

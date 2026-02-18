@@ -1,8 +1,11 @@
 package game;
 
 import engine.logic.GameRegister;
+import engine.objects.Empty;
 import engine.rendering.RenderType;
 import engine.types.GameInitializer;
+import engine.types.Object;
+import engine.types.World;
 
 public class Game extends GameRegister {
     
@@ -10,11 +13,19 @@ public class Game extends GameRegister {
     public GameInitializer register() {
         GameInitializer init = new GameInitializer();
         init.name = "Test-Game";
-        init.rt = RenderType.SOFTWARE;
-        init.screenWidth = 1280;
-        init.screenHeight = 720;
+        init.rt = RenderType.TEST_RENDERER;
+        init.screenWidth = 400;
+        init.screenHeight = 400;
         init.targetFPS = 20;
-        init.targetTPS = 20;
+        init.fov = 90;
+        init.targetTPS = 1;
+
+        Object newGameObject = new Empty("Test Object");
+        newGameObject.addProperty(new CustomBehaviour());
+        World world = new World("Test World");
+        world.addObject(newGameObject);
+        init.world = world;
+
         return init;
     }
 }

@@ -32,4 +32,24 @@ public class Matrix {
         }
         return out;
     }
+
+    public Matrix act(Matrix mat) {
+        if(n != mat.m) return mat;
+        Matrix output = new Matrix(m, mat.n);
+        for(int i = 0; i < output.m; i++) {
+            for(int j = 0; j < output.n; j++) {
+                double sum = 0;
+                for(int k = 0; k < mat.m; k++) {
+                    sum += val[i][k] * mat.val[k][j];
+                }
+                output.val[i][j] = sum;
+            }
+        }
+        return output;
+    }
+
+    //TODO: Write this function
+    public Matrix inverse() {
+        return this;
+    }
 }

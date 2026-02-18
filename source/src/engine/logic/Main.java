@@ -38,12 +38,15 @@ public class Main {
         targetFPS = gi.targetFPS;
         targetTPS = gi.targetTPS;
 
-        World.changeWorld(new World("Default"));
-        Camera.changeCamera(new Camera("Main Camera"));
+        System.out.println("Loaded World: " + gi.world.name);
+        Camera mainCam = new Camera("Main Camera", gi.fov, gi.screenHeight, gi.screenWidth / gi.screenHeight);
+        World.changeWorld(gi.world);
+        World.getCurrent().addObject(mainCam);
+        Camera.changeCamera(mainCam);
 
-        running = true;
         window = GameWindow.getInstance(name, gi.screenWidth, gi.screenHeight);
 
+        System.out.println("Use Render-pipeline: " + gi.rt);
         try {
             Class<?>[] renderParams = {int.class, int.class};
             Method renderClass = rendering.getRenderClass().getMethod("getInstance", renderParams);
@@ -56,6 +59,9 @@ public class Main {
 
         RenderClock rendererClock = new RenderClock(renderer);
         GameClock gameClock = new GameClock();
+
+        running = true;
+        World.getCurrent().initialize();
 
         rendererClock.start();
         gameClock.start();

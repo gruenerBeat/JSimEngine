@@ -7,6 +7,7 @@ public abstract class Property {
     private String name;
     private PropertyType type; 
     private int id;
+    private Object parent;
 
     public Property(String name, PropertyType type) {
         this.name = name;
@@ -29,5 +30,14 @@ public abstract class Property {
         this.id = id;
     }
 
-    public abstract void instantiate();
+    public Object getParent() {
+        return parent;
+    }
+
+    public void setParent(Object parent) {
+        this.parent = parent;
+    }
+
+    public abstract void initialize();
+    public abstract void tick();
 }

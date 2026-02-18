@@ -1,5 +1,6 @@
 package engine.properties;
 
+import engine.libs.math.Matrix;
 import engine.libs.math.Vector;
 import engine.types.Property;
 
@@ -41,5 +42,49 @@ public class Transform extends Property{
     }
 
     @Override
-    public void instantiate() {}
+    public void initialize() {}
+
+    @Override
+    public void tick() {}
+
+    public Matrix localToWorldMatrix() {
+        double[][] valTranslation = {
+            {1, 0, 0, position.val[0]},
+            {0, 1, 0, position.val[1]},
+            {0, 0, 1, position.val[2]},
+            {0, 0, 0, 1}
+        };
+        double[][] valRotX = {
+            {1, 0, 0, 0},
+            {0, Math.cos(rotation.val[0]), Math.sin(rotation.val[0]), 0},
+            {0, -Math.sin(rotation.val[0]), Math.cos(rotation.val[0]), 0},
+            {0, 0, 0, 1}
+        };
+        double[][] valRotY = {
+            {Math.cos(rotation.val[1]), 0, -Math.sin(rotation.val[1]), 0},
+            {0, 1, 0, 0},
+            {Math.sin(rotation.val[1]), 0, Math.cos(rotation.val[1]), 0},
+            {0, 0, 0, 1}
+        };
+        double[][] valRotZ = {
+            {Math.cos(rotation.val[2]), -Math.sin(rotation.val[2]), 0, 0},
+            {Math.sin(rotation.val[2]), Math.cos(rotation.val[2]), 0, 0},
+            {0, 0, 1, 0},
+            {0, 0, 0, 1}
+        };
+        Matrix translationMatrix = new Matrix(4, 4);
+        translationMatrix.val = valTranslation;
+        Matrix rotationXMatrix = new Matrix(4, 4);
+        rotationXMatrix.val = valRotX;
+        Matrix rotationYMatrix = new Matrix(4, 4);
+        rotationYMatrix.val = valRotY;
+        Matrix rotationZMatrix = new Matrix(4, 4);
+        rotationZMatrix.val = valRotZ;
+        Matrix rotationMatrix = rotationZMatrix.act(rotationYMatrix.act(rotationXMatrix));
+        return rotationMatrix.act(translationMatrix);
+    }
+
+    public Matrix worldToLocalMatrix() {
+        return localToWorldMatrix().inverse();
+    }
 }
