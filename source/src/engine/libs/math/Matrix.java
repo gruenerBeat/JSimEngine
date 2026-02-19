@@ -36,6 +36,16 @@ public class Matrix {
         return n;
     }
 
+    public Matrix multiply(double a) {
+        Matrix out = new Matrix(m, n);
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                out.val[i][j] = a * val[i][j];
+            }   
+        }
+        return out;
+    }
+
     public Vector act(Vector v) {
         if(v.getSize() != n) return v;
         Vector out = new Vector(m);
@@ -64,8 +74,29 @@ public class Matrix {
         return output;
     }
 
-    //TODO: Write this function
+    public double determinant() {
+        if(m != n) return 0;
+        if(m == 2) {
+            return val[0][0] * val[1][1] - val[0][1] * val[1][0];
+        }
+
+        //TODO: Program remaining cases: 3, 4, >4
+        return 0;
+    }
+
+    
     public Matrix inverse() {
+        if(m != n) return this;
+        if(m == 2) {
+            if(determinant() == 0) return this;
+            Matrix mat = new Matrix(new double[][]{
+                {val[1][1], -val[0][1]},
+                {-val[1][0], val[0][0]}
+            }, m, n);
+            return mat.multiply(determinant());
+        }
+
+        //TODO: Program remaining cases: 3, 4, >4
         return this;
     }
 }
