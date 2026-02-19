@@ -37,7 +37,7 @@ public class CameraProperty extends Property{
     }
 
     public Matrix getLocalToWorldMatrix() {
-        if(!getParent().hasProperty(PropertyType.TRANSFORM)) return Matrix.zero(4, 4);
+        assert getParent().hasProperty(PropertyType.TRANSFORM) : "Parent object doesn't have a transform";
         Transform transform = (Transform)getParent().findProperty(PropertyType.TRANSFORM);
         return transform.getWorldToLocalMatrix().inverse();
     }

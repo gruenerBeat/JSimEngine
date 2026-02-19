@@ -12,13 +12,9 @@ public class Camera extends Object{
         return current;
     }
 
-    public static boolean changeCamera(Object cam) {
-        if(cam.hasProperty(PropertyType.CAMERA)) {
-            current = cam;
-            return true;
-        } else {
-            return false;
-        }
+    public static void changeCamera(Object cam) {
+        assert cam.hasProperty(PropertyType.CAMERA) : "Object isn't a camera";
+        current = cam;
     }
 
     public Camera(String name, double fov, int sensorDimension, double aspectRatio) {

@@ -39,7 +39,7 @@ public class GameWindow extends JFrame {
     }
 
     public void Draw(Texture t) {
-        if(t.getWidth() != getWidth() || t.getHeight() != getHeight()) return;
+        assert(t.getWidth() == getWidth() || t.getHeight() == getHeight()) : "Texture size doesn't match window size";
 
         BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 

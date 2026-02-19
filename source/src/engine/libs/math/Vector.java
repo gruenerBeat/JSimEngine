@@ -16,11 +16,11 @@ public class Vector {
     }
 
     public static Vector zero(int size) {
-	Vector v = new Vector(size);
-	for(int i = 0; i < size; i++) {
-	    v.val[i] = 0;
-	}
-	return v;
+        Vector v = new Vector(size);
+        for(int i = 0; i < size; i++) {
+            v.val[i] = 0;
+        }
+        return v;
     }
 
     public int getSize() {
@@ -43,7 +43,7 @@ public class Vector {
     }
 
     public static double dot(Vector a,  Vector b) {
-        if(a.getSize() != b.getSize()) return 0;
+        assert a.getSize() == b.getSize() : "Vector dimensions don't match";
         double sum = 0;
         for(int i = 0; i < a.getSize(); i++) {
             sum += a.val[i] * b.val[i];
@@ -52,7 +52,7 @@ public class Vector {
     }
 
     public static Vector add(Vector a, Vector b) {
-        if(a.getSize() != b.getSize()) return a;
+        assert a.getSize() == b.getSize() : "Vector dimensions don't match";
         Vector out = new Vector(a.getSize());
         for(int i = 0; i < a.getSize(); i++) {
             out.val[i] = a.val[i] + b.val[i];
@@ -61,7 +61,7 @@ public class Vector {
     }
 
     public static Vector sub(Vector a, Vector b) {
-        if(a.getSize() != b.getSize()) return a;
+        assert a.getSize() == b.getSize() : "Vector dimensions don't match";
         Vector out = new Vector(a.getSize());
         for(int i = 0; i < a.getSize(); i++) {
             out.val[i] = a.val[i] - b.val[i];
@@ -78,7 +78,8 @@ public class Vector {
     }
 
     public static Vector cross3(Vector a, Vector b) {
-        if(a.getSize() != b.getSize() || a.getSize() != 3) return a;
+        assert a.getSize() == b.getSize() : "Vector dimensions don't match";
+        assert a.getSize() == 3 : "Vectors aren't 3-dimensional";
         Vector out = new Vector(3);
         out.val[0] = a.val[1] * b.val[2] - a.val[2] * b.val[1];
         out.val[1] = a.val[2] * b.val[0] - a.val[0] * b.val[2];
@@ -87,7 +88,7 @@ public class Vector {
     }
 
     public static Vector hadamard(Vector a, Vector b) {
-        if(a.getSize() != b.getSize()) return a;
+        assert a.getSize() == b.getSize() : "Vector dimensions don't match";
         Vector out = new Vector(a.getSize());
         for(int i = 0; i < a.getSize(); i++) {
             out.val[i] = a.val[i] * b.val[i];
@@ -97,10 +98,10 @@ public class Vector {
 
     @Override
     public String toString() {
-	String a = "";
-	for(double d : val) {
-	    a += d + "  ";
-	}
-	return a;
+        String a = "";
+        for(double d : val) {
+            a += d + "  ";
+        }
+        return a;
     }
 }

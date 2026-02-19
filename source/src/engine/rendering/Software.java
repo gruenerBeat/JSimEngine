@@ -26,17 +26,10 @@ public class Software extends Renderer {
     
     @Override
     public Texture render(Object cam, World world) {
-        if(!cam.hasProperty(PropertyType.CAMERA)) return new Texture(width, height);
+        assert cam.hasProperty(PropertyType.CAMERA) : "Object isn't a camera";
 
-        for(Object obj : world.getObjects()) {
-            if(obj.hasProperty(PropertyType.MESH_RENDERER)) {
+        //TODO : Code Software Rasterizer
 
-            }
-        }
-
-        Texture tex = new Texture(width, height);
-
-        
-        return tex;
+        return new Texture(width, height);
     }
 }

@@ -26,7 +26,7 @@ public class RayTracing extends Renderer {
 
     @Override
     public Texture render(Object cam, World world) {
-        if(!cam.hasProperty(PropertyType.CAMERA)) return new Texture(width, height);
+        assert cam.hasProperty(PropertyType.CAMERA) : "Object isn't a camera";
 
         //TODO : Code RayTracer
 
