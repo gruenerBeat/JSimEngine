@@ -12,6 +12,22 @@ public class Matrix {
         this.n = n;
     }
 
+    public Matrix(double[][] values, int m, int n) {
+        val = values;
+        this.m = m;
+        this.n = n;
+    }
+
+    public static Matrix zero(int m, int n) {
+        Matrix zero = new Matrix(m, n);
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                zero.val[i][j] = 0;
+            }   
+        }
+        return zero;
+    }
+
     public int getM() {
         return m;
     }
