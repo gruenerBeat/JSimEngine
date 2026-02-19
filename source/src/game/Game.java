@@ -20,11 +20,11 @@ public class Game extends GameRegister {
         init.fov = 90;
         init.targetTPS = 1;
 
-        Object newGameObject = new Empty("Test Object");
-        newGameObject.addProperty(new CustomBehaviour());
-        World world = new World("Test World");
-        world.addObject(newGameObject);
-        init.world = world;
+	World world = new World("Test");
+	Object obj = new Empty("Test Object");
+	obj.addProperty(new MatrixTest());
+	world.addObject(obj);
+	init.world = world;
 
         return init;
     }

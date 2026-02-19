@@ -36,6 +36,16 @@ public class Matrix {
         return n;
     }
 
+    public Matrix clone() {
+        Matrix out = new Matrix(m, n);
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                out.val[i][j] = val[i][j];
+            }   
+        }
+        return out;
+    }
+
     public Matrix multiply(double a) {
         Matrix out = new Matrix(m, n);
         for(int i = 0; i < m; i++) {
@@ -74,6 +84,16 @@ public class Matrix {
         return output;
     }
 
+    public Matrix transpose() {
+	Matrix transpose = new Matrix(n, m);
+	for(int i = 0; i < m; i++) {
+	    for(int j = 0; j < n; j++) {
+		transpose.val[j][i] = val[i][j];
+	    }
+	}
+	return transpose;
+    }
+
     public double determinant() {
         if(m != n) return 0;
         if(m == 2) {
@@ -98,5 +118,69 @@ public class Matrix {
 
         //TODO: Program remaining cases: 3, 4, >4
         return this;
+    }
+
+    public void LU(Vector p) {
+	p = new Vector(m);
+	for(int j = 0; j < n; j++) {
+	    p.val[j] = j;
+	    double alpha = Math.abs(val[j][j]);
+	    for(int i = j + 1; i < m; i++) {
+		if(Math.abs(val[i][j]) > alpha) {
+		    alpha = Math.abs(val[i][j]);
+		    p.val[j] = i;
+		}
+	    }
+	    if(p.val[j] != j) {
+		double[] rowJ = val[j];
+		val[j] = val[(int)p.val[j]];
+		val[(int)p.val[j]] = rowJ;
+	    }
+	    for(int i = j + 1; i < m; i++) {
+		val[i][j] /= val[j][j];
+		for(int l = j + 1; l < n; l++) {
+		    val[i][l] -= val[i][j] * val[j][l];
+		}
+	    }
+	}
+    }
+
+    public void solve(Vector p, Vector b) {
+	for(int i = 0; i < m; i++) {
+	    if(p.val[i] != i) {
+		double tmp = b.val[i];
+		b.val[i] = b.val[(int)p.val[i]];
+		b.val[(int)p.val[i]] = tmp;
+	    }
+	}
+
+	//Forward subst (m == n)
+	for(int i = 0; i < n; i++) {
+	    for(int j = 0; j < i; j++) {
+		b.val[i] -= val[i][j] * b.val[j];
+	    }
+	    //b.val[i] /= A.val[i][i];
+	}
+
+	//Backward subst (m == n)
+	for(int i = n - 1; i >= 0; i--) {
+	    for(int j = i + 1; j < n; j++) {
+		b.val[i] -= val[i][j] * b.val[j];
+	    }
+	    b.val[i] /= val[i][i];
+	}
+
+    }
+
+    @Override
+    public String toString() {
+	String a = "";
+	for(int i = 0; i < m; i++) {
+	    for(int j = 0; j < n; j++) {
+		a += val[i][j] + "  ";
+	    }
+	    a += "\n";
+	}
+	return a;
     }
 }

@@ -18,7 +18,7 @@ public class GameWindow extends JFrame {
         setSize(width, height);
         setResizable(false);
         setBackground(new Color(0, 0, 0));
-        setLocation(0, 0);
+        setLocation(200, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel panel = new JPanel(new BorderLayout());

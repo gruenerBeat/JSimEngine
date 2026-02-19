@@ -15,6 +15,14 @@ public class Vector {
         size = val.length;
     }
 
+    public static Vector zero(int size) {
+	Vector v = new Vector(size);
+	for(int i = 0; i < size; i++) {
+	    v.val[i] = 0;
+	}
+	return v;
+    }
+
     public int getSize() {
         return size;
     }
@@ -85,5 +93,14 @@ public class Vector {
             out.val[i] = a.val[i] * b.val[i];
         }
         return out;
+    }
+
+    @Override
+    public String toString() {
+	String a = "";
+	for(double d : val) {
+	    a += d + "  ";
+	}
+	return a;
     }
 }
