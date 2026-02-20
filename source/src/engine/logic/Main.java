@@ -46,7 +46,7 @@ public class Main {
 
         window = GameWindow.getInstance(name, gi.screenWidth, gi.screenHeight);
 
-        System.out.println("Use Render-pipeline: " + gi.rt);
+        System.out.println("Use Render-pipeline: " + rendering);
         try {
             Class<?>[] renderParams = {int.class, int.class};
             Method renderClass = rendering.getRenderClass().getMethod("getInstance", renderParams);
@@ -60,8 +60,9 @@ public class Main {
         RenderClock rendererClock = new RenderClock(renderer);
         GameClock gameClock = new GameClock();
 
+        game.init();
+
         running = true;
-        World.getCurrent().initialize();
 
         rendererClock.start();
         gameClock.start();

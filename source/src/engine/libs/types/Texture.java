@@ -12,6 +12,11 @@ public class Texture {
         this.width = width;
         this.height = height;
         pixels = new Color[width][height];
+        for(int x = 0; x < width; x++) {
+            for(int y = 0; y < height; y++) {
+                pixels[x][y] = new Color(0, 0, 0);
+            }   
+        }
     }
 
     public int getWidth() {

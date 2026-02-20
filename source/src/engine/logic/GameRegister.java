@@ -5,4 +5,5 @@ import engine.types.GameInitializer;
 public abstract class GameRegister {
 
     public abstract GameInitializer register();
+    public abstract void init();
 }

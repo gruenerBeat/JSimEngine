@@ -1,11 +1,8 @@
 package engine.rendering;
 
-import game.TestRenderer;
-
 public enum RenderType {
     SOFTWARE(Software.class),
-    RAY_TRACING(RayTracing.class),
-    TEST_RENDERER(TestRenderer.class);
+    RAY_TRACING(RayTracing.class);
 
     private final Class<? extends Renderer> renderClass;
 

@@ -6,6 +6,7 @@ public class GameClock extends Thread {
 
     @Override
     public void run() {
+        World.getCurrent().initialize();
         while (Main.isRunning()) {
             try {
                 Thread.sleep(1000 / Main.getTargetTPS());

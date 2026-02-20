@@ -14,6 +14,7 @@ public class RenderClock extends Thread {
 
     @Override
     public void run() {
+        renderer.setup(Camera.getCurrent(), World.getCurrent());
         while (Main.isRunning()) {
             try {
                 if(Main.getTargetFPS() <= Main.getActualFPS()) {

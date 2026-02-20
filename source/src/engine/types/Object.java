@@ -4,8 +4,9 @@ import java.util.ArrayList;
 
 import engine.properties.PropertyType;
 
+
 public abstract class Object {
-    
+
     public String name;
     public boolean active;
 
@@ -18,80 +19,59 @@ public abstract class Object {
         properties = new ArrayList<>();
     }
 
-    public void addProperty(Property p) {
-        p.setId(propertyCount);
-        p.setParent(this);
-        properties.add(p);
+    public void addProperty(Property property) {
+        if(property.getType() != PropertyType.BEHAVIOUR && hasProperty(property.getType())) return;
+        property.setId(propertyCount);
+        properties.add(property);
         propertyCount++;
-    }
-
-    public Property findProperty(String name) {
-        for(Property p : properties) {
-            if(p.getName() == name) {
-                return p;
-            }
-        }
-        return properties.get(0);
-    }
-
-    public Property findProperty(PropertyType type) {
-        for(Property p : properties) {
-            if(p.getType() == type) {
-                return p;
-            }
-        }
-        return properties.get(0);
-    }
-
-    public Property findProperty(int id) {
-        for(Property p : properties) {
-            if(p.getId() == id) {
-                return p;
-            }
-        }
-        return properties.get(0);
-    }
-
-    public boolean hasProperty(PropertyType type) {
-        for(Property p : properties) {
-            if(p.getType() == type) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public boolean hasProperty(String name) {
         for(Property p : properties) {
             if(p.getName() == name) {
                 return true;
-            }
+            }   
         }
         return false;
     }
 
-    public void removeProperty(String name) {
-        for(Property p : properties) {
-            if(p.getName() == name) {
-                properties.remove(p);
-            }
-        }
-    }
-
-    public void removeProperty(PropertyType type) {
+    public boolean hasProperty(PropertyType type) {
         for(Property p : properties) {
             if(p.getType() == type) {
-                properties.remove(p);
-            }
+                return true;
+            }   
         }
+        return false;
     }
 
-    public void removeProperty(int id) {
+    public Property findProperty(String name) {
+        assert hasProperty(name) : "Cannot find property: " + name + " on object: " + this.name;
+        for(Property p : properties) {
+            if(p.getName() == name) {
+                return p;
+            }; 
+        }
+        return null;
+    }
+
+    public Property findProperty(int id) {
+        assert propertyCount > id : "Object: " + this.name + " doesn't have a property with id: " + id;
         for(Property p : properties) {
             if(p.getId() == id) {
-                properties.remove(p);
-            }
+                return p;
+            }; 
         }
+        return null;
+    }
+
+    public Property findProperty(PropertyType type) {
+        assert hasProperty(type) : "Cannot find property: " + type + " on object: " + this.name;
+        for(Property p : properties) {
+            if(p.getType() == type) {
+                return p;
+            }; 
+        }
+        return null;
     }
 
     public void initialize() {
