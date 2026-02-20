@@ -3,7 +3,6 @@ package engine.types;
 import java.util.ArrayList;
 
 import engine.logic.Main;
-import engine.objects.Empty;
 
 public class World {
 
@@ -33,16 +32,25 @@ public class World {
         }
     }
 
-    public Object findObject(String name) {
-        if(objects.isEmpty()) {
-            return new Empty("NULL");
+    public boolean hasObject(String name) {
+        assert !objects.isEmpty() : "No objects in world: " + this.name;
+        for(Object obj : objects) {
+            if(obj.name == name) {
+                return true;
+            }
         }
+        return false;
+    }
+
+    public Object findObject(String name) {
+        assert !objects.isEmpty() : "No objects in world: " + this.name;
+        assert hasObject(name) : "No object: " + name + " in world: " + this.name;
         for(Object obj : objects) {
             if(obj.name == name) {
                 return obj;
             }
         }
-        return objects.get(0);
+        return null;
     }
 
     public ArrayList<Object> getObjects() {
