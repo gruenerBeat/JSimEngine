@@ -11,6 +11,13 @@ public class Transform extends Property{
     private Vector yVector;
     private Vector zVector;
 
+    public static final Vector up = new Vector(new double[]{0, 1, 0});
+    public static final Vector down = new Vector(new double[]{0, -1, 0});
+    public static final Vector left = new Vector(new double[]{1, 0, 0});
+    public static final Vector right = new Vector(new double[]{-1, 0, 0});
+    public static final Vector forward = new Vector(new double[]{0, 0, 1});
+    public static final Vector backward = new Vector(new double[]{0, 0, -1});
+
     public Transform() {
         super("Transform", PropertyType.TRANSFORM);
         reset();
@@ -25,6 +32,34 @@ public class Transform extends Property{
 
     public Vector getPosition() {
         return position;
+    }
+
+    public Vector getxVector() {
+        return xVector;
+    }
+
+    public Vector getyVector() {
+        return yVector;
+    }
+
+    public Vector getzVector() {
+        return zVector;
+    }
+
+    public void setxVector(Vector xVector) {
+        this.xVector = xVector;
+    }
+
+    public void setyVector(Vector yVector) {
+        this.yVector = yVector;
+    }
+
+    public void setzVector(Vector zVector) {
+        this.zVector = zVector;
+    }
+
+    public void setPosition(Vector position) {
+        this.position = position;
     }
 
     public void translate(Vector v) {

@@ -2,6 +2,7 @@ package engine.properties;
 
 import engine.libs.math.Matrix;
 import engine.libs.math.Trig;
+import engine.libs.math.Vector;
 import engine.types.Property;
 
 public class CameraProperty extends Property{
@@ -38,19 +39,28 @@ public class CameraProperty extends Property{
 
     public Matrix getLocalToWorldMatrix() {
         assert getParent().hasProperty(PropertyType.TRANSFORM) : "Parent object doesn't have a transform";
-        Transform transform = (Transform)getParent().findProperty(PropertyType.TRANSFORM);
-        return transform.getWorldToLocalMatrix().inverse();
+        return getParent().transform().getWorldToLocalMatrix().inverse();
     }
 
     public Matrix getProjectionMatrix() {
         double value[][] = {
-            {focalLength, 0, sensorDimension / 2},
-            {0, focalLength, (sensorDimension * aspectRatio) / 2},
+            {focalLength, 0, (sensorDimension * aspectRatio) / 2},
+            {0, focalLength, sensorDimension / 2},
             {0, 0, 1}
         };
         Matrix out = new Matrix(3, 3);
         out.val = value;
         return out;
+    }
+
+    public void lookAt(Vector pos) {
+        Vector newZ = Vector.sub(pos, getParent().transform().getPosition()).normalized(1);
+        Vector newX = Vector.cross3(newZ, Transform.up).normalized(1);
+        Vector newY = Vector.cross3(newX, newZ).normalized(1);
+
+        getParent().transform().setxVector(newX);
+        getParent().transform().setyVector(newY);
+        getParent().transform().setzVector(newZ);
     }
 
     @Override

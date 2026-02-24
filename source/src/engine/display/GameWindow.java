@@ -8,6 +8,7 @@ import engine.libs.types.Texture;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.util.stream.IntStream;
 
 public class GameWindow extends JFrame {
 
@@ -43,14 +44,13 @@ public class GameWindow extends JFrame {
 
         BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 
-        for(int x = 0; x < t.getWidth(); x++) {
-            for(int y = 0; y < t.getHeight(); y++) {
-
+        IntStream.range(0, t.getWidth()).parallel().forEach(x -> {
+            IntStream.range(0, t.getHeight()).parallel().forEach(y -> {
                 engine.libs.types.Color.Color color = t.getPixelAt(x, y);
                 int rgb = color.toRGBInt();
                 image.setRGB(x, y, rgb);
-            }   
-        }
+            });
+        });
 
         getGraphics().drawImage(image, 0, 0, this);
     }

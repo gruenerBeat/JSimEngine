@@ -11,5 +11,6 @@ public class Game extends GameRegister {
     }
 
     @Override
-    public void init() {}
+    public void init() {
+    }
 }

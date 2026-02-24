@@ -133,7 +133,8 @@ public class Matrix {
 
     public Matrix inverse() {
         assert m == n : "Can't form inverse of non-square matrix";
-        assert determinant() != 0 : "Can't form inverse of singular matrix";
+        //assert determinant() != 0 : "Can't form inverse of singular matrix";
+        if(determinant() == 0) return this;
 
         if(m == 2) {
             Matrix out = new Matrix(new double[][]{

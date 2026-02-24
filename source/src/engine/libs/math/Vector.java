@@ -42,6 +42,23 @@ public class Vector {
         }
     }
 
+    public Vector normalized(double a) {
+        Vector v = new Vector(val);
+        double mag = magnitude();
+        for(int i = 0; i < size; i++) {
+            v.val[i] *= (a / mag);
+        }
+        return v;
+    }
+
+    public Vector rotated(Vector axis, double angle) {
+        Vector one = Vector.mul(this, Math.cos(angle));
+        Vector two = Vector.mul(Vector.cross3(axis.normalized(1), this), Math.sin(angle));
+        Vector three = Vector.mul(axis.normalized(1), Vector.dot(axis.normalized(1), this) * (1 - Math.cos(angle)));
+        return Vector.add(one, Vector.add(two, three));
+    }
+
+
     public static double dot(Vector a,  Vector b) {
         assert a.getSize() == b.getSize() : "Vector dimensions don't match";
         double sum = 0;

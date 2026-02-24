@@ -3,6 +3,7 @@ package engine.types;
 import java.util.ArrayList;
 
 import engine.properties.PropertyType;
+import engine.properties.Transform;
 
 
 public abstract class Object {
@@ -22,6 +23,7 @@ public abstract class Object {
     public void addProperty(Property property) {
         if(property.getType() != PropertyType.BEHAVIOUR && hasProperty(property.getType())) return;
         property.setId(propertyCount);
+        property.setParent(this);
         properties.add(property);
         propertyCount++;
     }
@@ -80,9 +82,34 @@ public abstract class Object {
         }
     }
 
+    public void removeProperty(String name) {
+        Property property = findProperty(name);
+        property.setParent(null);
+        properties.remove(property);
+        propertyCount--;
+    }
+
+    public void removeProperty(int id) {
+        Property property = findProperty(id);
+        property.setParent(null);
+        properties.remove(property);
+        propertyCount--;
+    }
+
+    public void removeProperty(PropertyType type) {
+        Property property = findProperty(type);
+        property.setParent(null);
+        properties.remove(property);
+        propertyCount--;
+    }
+
     public void tick() {
         for(Property p : properties) {
             p.tick();
         }
+    }
+
+    public Transform transform() {
+        return ((Transform)findProperty(PropertyType.TRANSFORM));
     }
 }

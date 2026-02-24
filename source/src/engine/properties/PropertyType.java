@@ -1,7 +1,15 @@
 package engine.properties;
 
 public enum PropertyType {
+
+    //Basic
     TRANSFORM,
+
+    //Actions
     BEHAVIOUR,
-    CAMERA
+
+    //Rendering
+    CAMERA,
+    SPHERE_RENDERER,
+    MESH_RENDERER
 }

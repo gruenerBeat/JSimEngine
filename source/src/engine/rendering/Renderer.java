@@ -14,6 +14,7 @@ public abstract class Renderer {
         this.height = height;
     }
 
-    public void setup(Object cam, World world) {}
+    public abstract void setup(Object cam, World world);
+    public abstract void update(Object cam, World world);
     public abstract Texture render(Object cam, World world);
 }

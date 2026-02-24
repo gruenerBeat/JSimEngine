@@ -25,11 +25,23 @@ public class Software extends Renderer {
     }
     
     @Override
+    public void setup(Object cam, World world) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
     public Texture render(Object cam, World world) {
         assert cam.hasProperty(PropertyType.CAMERA) : "Object isn't a camera";
 
         //TODO : Code Software Rasterizer
 
         return new Texture(width, height);
+    }
+
+    @Override
+    public void update(Object cam, World world) {
+        // TODO Auto-generated method stub
+        
     }
 }

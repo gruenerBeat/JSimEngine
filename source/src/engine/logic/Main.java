@@ -39,7 +39,7 @@ public class Main {
         targetTPS = gi.targetTPS;
 
         System.out.println("Loaded World: " + gi.world.name);
-        Camera mainCam = new Camera("Main Camera", gi.fov, gi.screenHeight, gi.screenWidth / gi.screenHeight);
+        Camera mainCam = new Camera("Main Camera", gi.fov, gi.screenHeight, (double)gi.screenWidth / (double)gi.screenHeight);
         World.changeWorld(gi.world);
         World.getCurrent().addObject(mainCam);
         Camera.changeCamera(mainCam);
