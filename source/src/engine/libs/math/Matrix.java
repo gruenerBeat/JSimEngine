@@ -126,9 +126,17 @@ public class Matrix {
                     val[1][1] * (val[2][3] * val[3][0] - val[2][0] * val[3][3]) +
                     val[1][0] * (val[2][1] * val[3][3] - val[2][3] * val[3][1]));
         }
-
-        //TODO: Implement General determinant algorithm
-        return 1;
+	Matrix tmp = clone();
+        Vector p = new Vector(m);
+        tmp.LU(p);
+	double det = 1;
+        for(int i = 0; i < n; i++) {
+	    if (p.val[i] != i) {
+		det *= -1;
+	    }
+	    det *= tmp.val[i][i];
+	}
+	return det;
     }
 
     public Matrix inverse() {
@@ -217,8 +225,8 @@ public class Matrix {
 	        b.val[i] = 1;
 	        tmp.solve(p, b);
 	        inv.val[i] = b.val;
-	    }
-	    return inv.transpose();
+	}
+	return inv.transpose();
     }
 
     private void LU(Vector p) {
