@@ -19,6 +19,8 @@ import engine.libs.math.HomogenousCoords;
 
 public class RayTracing extends Renderer {
 
+    public int maxBounces = 10;
+
     private static RayTracing rayTracing;
 
     private Ray[][] rays;
@@ -43,6 +45,65 @@ public class RayTracing extends Renderer {
     public Texture render(Object cam, World world) {
         assert cam.hasProperty(PropertyType.CAMERA) : "Object isn't a camera";
         Texture tex = new Texture(width, height);
+
+        for(int i = 0; i < maxBounces; i++) {
+            IntStream.range(0, width).parallel().forEach(x -> {
+                IntStream.range(0, height).parallel().forEach(y -> {
+                    if(rays[x][y].trace) {
+
+                        boolean didHit = false;
+                        Color hitColor = new Color(0, 0, 0);
+                        Vector hitNormal = new Vector(3);
+                        double hitDst = Double.MAX_VALUE;
+                        Vector hitPos = new Vector(3);
+                        double emissiveness;
+
+                        for(int j = 0; j < world.getObjects().size(); j++) {
+                            Object object = world.getObjects().get(j);
+
+                            if(object.hasProperty(PropertyType.SPHERE_RENDERER)) {
+                                double r = ((SphereRenderer)object.findProperty(PropertyType.SPHERE_RENDERER)).radius;
+                                Vector position = object.transform().getPosition();
+                                Color sphereColor = ((SphereRenderer)object.findProperty(PropertyType.SPHERE_RENDERER)).material.color;
+
+                                double a = rays[x][y].direction.magnitude() * rays[x][y].direction.magnitude();
+                                double b = 2 *  Vector.dot(rays[x][y].direction, Vector.sub(rays[x][y].origin, position));
+                                double c = Vector.sub(rays[x][y].origin, position).magnitude() * Vector.sub(rays[x][y].origin, position).magnitude() - r * r;
+
+                                double d = b * b - 4 * a * c;
+
+                                if(d >= 0) {
+                                    double dst;
+
+                                    if(d == 0) {
+                                        dst = -(b / 2);
+                                    } else {
+                                        double dst1 = (-b + Math.sqrt(d)) / 2;
+                                        double dst2 = (-b - Math.sqrt(d)) / 2;
+
+                                        dst = dst1 < dst2 ? dst1 : dst2;
+                                    }
+
+                                    if(dst < hitDst) {
+                                        hitDst = dst;
+                                        hitNormal = Vector.sub(Vector.add(rays[x][y].origin, Vector.mul(rays[x][y].direction, dst)), position).normalized(1);
+                                        didHit = true;
+                                        hitColor = sphereColor;
+                                        hitPos = Vector.add(rays[x][y].origin, Vector.mul(rays[x][y].direction, dst));
+                                    }
+                                }
+                            }
+                        }
+                        if(didHit) {
+                            rays[x][y].hitColor = Color.add(rays[x][y].hitColor, hitColor.mul(i));
+                        } else {
+                            rays[x][y].trace = false;
+                        }
+                    }
+                });
+            });
+        }
+
 
         IntStream.range(0, width).parallel().forEach(x -> {
             IntStream.range(0, height).parallel().forEach(y -> {

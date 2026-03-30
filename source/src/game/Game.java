@@ -1,44 +1,52 @@
 package game;
  
-import engine.logic.GameRegister;
-import engine.types.GameInitializer;
-import engine.rendering.RenderType;
-import engine.objects.Empty;
-import engine.properties.renderers.SphereRenderer;
-import engine.libs.types.Color.Color;
 import engine.libs.math.Vector;
+import engine.libs.types.Color.Color;
+import engine.logic.GameRegister;
+import engine.objects.Camera;
+import engine.objects.Empty;
+import engine.properties.CameraProperty;
+import engine.properties.PropertyType;
+import engine.properties.renderers.SphereRenderer;
+import engine.rendering.RenderType;
+import engine.types.GameInitializer;
 import engine.types.Object;
 import engine.types.World;
-import engine.libs.math.Matrix;
-import game.MatrixTest;
 
 public class Game extends GameRegister {
     
     @Override
     public GameInitializer register() {
         GameInitializer init = new GameInitializer();
-	init.screenWidth = 1280;
-	init.screenHeight = 720;
-	init.rt = RenderType.RAY_TRACING;
-
-	return init;
+        init.name = "Test";
+        init.rt = RenderType.RAY_TRACING;
+        init.fov = 60;
+        init.screenHeight = 720;
+        init.screenWidth = 1280;
+        init.targetFPS = 20;
+        init.targetTPS = 20;
+        return init;
     }
 
     @Override
     public void init() {
-   
-	Matrix A = new Matrix(new double[][]{
-	    {0, 1},
-	    {1, 0}
-	}, 2, 2);
 
-	System.out.println(A.toString());
-	System.out.println("\n");
-	System.out.println(MatrixTest.determinant(A));
+        Camera.getCurrent().transform().setPosition(new Vector(new double[]{3, 0, 0}));
+        ((CameraProperty)Camera.getCurrent().findProperty(PropertyType.CAMERA)).lookAt(new Vector(new double[]{0, 0, 0}));
 
-	Object sphere = new Empty("Kugel");
-	sphere.addProperty(new SphereRenderer(1, new Color(127, 0, 0)));
-	sphere.transform().setPosition(new Vector(new double[]{0, 0, -3}));
-	World.getCurrent().addObject(sphere);
+        Object sphere1 = new Empty("sphere1");
+        sphere1.transform().setPosition(new Vector(new double[]{0, 0, 0}));
+        sphere1.addProperty(new SphereRenderer(1, new Color(255, 0, 0)));
+        World.getCurrent().addObject(sphere1);
+
+        Object sphere2 = new Empty("sphere2");
+        sphere2.transform().setPosition(new Vector(new double[]{0, 2, -1}));
+        sphere2.addProperty(new SphereRenderer(0.5, new Color(0, 255, 0)));
+        World.getCurrent().addObject(sphere2);
+
+        Object sphere3 = new Empty("sphere3");
+        sphere3.transform().setPosition(new Vector(new double[]{0, -3, 2}));
+        sphere3.addProperty(new SphereRenderer(1.2, new Color(255, 255, 0)));
+        World.getCurrent().addObject(sphere3);
     }
 }
