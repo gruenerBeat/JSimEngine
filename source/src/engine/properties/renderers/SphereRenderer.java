@@ -20,4 +20,12 @@ public class SphereRenderer extends Property {
 
     @Override
     public void tick() {}
+
+    @Override
+    public String pack() {
+        String propertyString = "{" + "\"" + getName() + "\"" + "," + getType().toString() + "," + getId() + ",[";
+        propertyString += radius + ",";
+        propertyString += material.toString() + "]}";
+        return propertyString;
+    }
 }

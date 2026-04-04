@@ -1,5 +1,6 @@
-package engine.logic;
+package engine.logic.serverside;
 
+import engine.logic.Main;
 import engine.types.World;
 
 public class GameClock extends Thread {

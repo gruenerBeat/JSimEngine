@@ -68,4 +68,14 @@ public class CameraProperty extends Property{
 
     @Override
     public void tick() {}
+
+    @Override
+    public String pack() {
+        String propertyString = "{" + "\"" + getName() + "\"" + "," + getType().toString() + "," + getId() + ",[";
+        propertyString += fov + ",";
+        propertyString += focalLength + ",";
+        propertyString += sensorDimension + ",";
+        propertyString += aspectRatio + "]}";
+        return propertyString;
+    }
 }

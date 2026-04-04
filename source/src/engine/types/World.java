@@ -76,4 +76,17 @@ public class World {
             obj.tick();
         }
     }
+
+    public String pack() {
+        String worldString = "{";
+        worldString += "\"" + name + "\"" + ",[";
+        for(int i = 0; i < objects.size(); i++) {
+            worldString += objects.get(i).pack();
+            if(i != objects.size() - 1) {
+                worldString += ",";
+            }
+        }
+        worldString += "]}";
+        return worldString;
+    }
 }

@@ -80,4 +80,14 @@ public class Transform extends Property{
             {0, 0, 0, 1}
         }, 4, 4);
     }
+
+    @Override
+    public String pack() {
+        String propertyString = "{" + "\"" + getName() + "\"" + "," + getType().toString() + "," + getId() + ",[";
+        propertyString += "{" + position.val[0] + "," + position.val[1] + "," + position.val[2] + "},";
+        propertyString += "{" + xVector.val[0] + "," + xVector.val[1] + "," + xVector.val[2] + "},";
+        propertyString += "{" + yVector.val[0] + "," + yVector.val[1] + "," + yVector.val[2] + "},";
+        propertyString += "{" + zVector.val[0] + "," + zVector.val[1] + "," + zVector.val[2] + "}]}";
+        return propertyString;
+    }
 }

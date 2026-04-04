@@ -40,4 +40,9 @@ public abstract class Property {
 
     public abstract void initialize();
     public abstract void tick();
+
+    public String pack() {
+        String propertyString = "{" + "\"" + name + "\"" + "," + type.toString() + "," + id + "}";
+        return propertyString;
+    }
 }

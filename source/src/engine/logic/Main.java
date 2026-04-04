@@ -3,7 +3,11 @@ package engine.logic;
 import java.lang.reflect.Method;
 
 import engine.display.GameWindow;
-import engine.objects.Camera;
+import engine.logic.clientside.RenderClock;
+import engine.logic.serverside.GameClock;
+import engine.networking.NetworkMode;
+import engine.networking.client.Client;
+import engine.networking.client.ServerInfo;
 import engine.rendering.RenderType;
 import engine.rendering.Renderer;
 import engine.types.GameInitializer;
@@ -13,6 +17,8 @@ import game.Game;
 public class Main {
 
     private static String name;
+    private static String gameId;
+    private static Client client;
     private static RenderType rendering;
     private static GameWindow window;
     private static boolean running;
@@ -28,44 +34,68 @@ public class Main {
     private static double mspt;
     private static Renderer renderer;
 
-    public void main(String[] args) {
 
-        Game game = new Game();
-        GameInitializer gi = game.register();
-        
-        name = gi.name;
-        rendering = gi.rt;
-        targetFPS = gi.targetFPS;
-        targetTPS = gi.targetTPS;
-
-        System.out.println("Loaded World: " + gi.world.name);
-        Camera mainCam = new Camera("Main Camera", gi.fov, gi.screenHeight, (double)gi.screenWidth / (double)gi.screenHeight);
-        World.changeWorld(gi.world);
-        World.getCurrent().addObject(mainCam);
-        Camera.changeCamera(mainCam);
-
-        window = GameWindow.getInstance(name, gi.screenWidth, gi.screenHeight);
-
-        System.out.println("Use Render-pipeline: " + rendering);
+    private Renderer initRenderer(RenderType rendering, int screenWidth, int screenHeight) {
         try {
             Class<?>[] renderParams = {int.class, int.class};
             Method renderClass = rendering.getRenderClass().getMethod("getInstance", renderParams);
-            renderer = (Renderer)renderClass.invoke(null, gi.screenWidth, gi.screenHeight);
+            return (Renderer)renderClass.invoke(null, screenWidth, screenHeight);
         } catch(Exception e) {
             e.printStackTrace();
-            System.out.println("Couldn't create Renderer!");
-            return;
+            return null;
         }
+    }
+
+    public void main(String[] args) {
+        
+        Game game = new Game();
+        GameInitializer gi = game.register();
+        name = gi.name;
 
         RenderClock rendererClock = new RenderClock(renderer);
         GameClock gameClock = new GameClock();
 
-        game.init();
+        if(gi.networkMode == NetworkMode.CLIENT) {
 
-        running = true;
+            rendering = gi.rt;
+            targetFPS = gi.targetFPS;
 
-        rendererClock.start();
-        gameClock.start();
+            renderer = initRenderer(rendering, gi.screenWidth, gi.screenHeight);
+            window = GameWindow.getInstance(name, gi.screenWidth, gi.screenHeight);
+
+            client = new Client(new ServerInfo(gi.serverAddress, gi.serverPort), gameId, gi.clientName);
+
+            if(!client.initializeConnection()) {
+                return;
+            }
+
+            running = true;
+            rendererClock.start();
+
+        } else if(gi.networkMode == NetworkMode.SERVER) {
+
+            targetTPS = gi.targetTPS;
+            World.changeWorld(gi.world);
+
+            game.init();
+            running = true;
+            gameClock.start();
+
+        } else if(gi.networkMode == NetworkMode.CLIENT_ATTACHED_SERVER) {
+
+            rendering = gi.rt;
+            targetFPS = gi.targetFPS;
+            targetTPS = gi.targetTPS;
+
+            renderer = initRenderer(rendering, gi.screenWidth, gi.screenHeight);
+            window = GameWindow.getInstance(name, gi.screenWidth, gi.screenHeight);
+
+            game.init();
+            running = true;
+            gameClock.start();
+            rendererClock.start();
+        }
+
     }
 
     public static double getActualFPS() {
@@ -114,6 +144,14 @@ public class Main {
 
     public static boolean isRunning() {
         return running;
+    }
+
+    public static Client getClient() {
+        return client;
+    }
+
+    public static String getGameId() {
+        return gameId;
     }
 
     public static void frameTicked() {

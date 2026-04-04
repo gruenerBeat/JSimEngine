@@ -112,4 +112,17 @@ public abstract class Object {
     public Transform transform() {
         return ((Transform)findProperty(PropertyType.TRANSFORM));
     }
+
+    public String pack() {
+        String objString = "{" + "\"" + name + "\"" + "," + active + "," + propertyCount + ",[";
+        for(int i = 0; i < properties.size(); i++) {
+            objString += properties.get(i).pack();
+            if(i != properties.size() - 1) {
+                objString += ",";
+            }
+        }
+        objString += "]}";
+        return objString;
+    }
+
 }

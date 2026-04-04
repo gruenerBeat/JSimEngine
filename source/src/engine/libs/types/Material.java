@@ -8,4 +8,8 @@ public class Material {
     public Color emissiveColor;
     public double emission;
     public double reflectivness;
+
+    public Material(Color color) {
+        this.color = color;
+    }
 }

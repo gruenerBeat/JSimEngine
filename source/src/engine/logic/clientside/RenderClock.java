@@ -1,7 +1,8 @@
-package engine.logic;
+package engine.logic.clientside;
 
 
 import engine.libs.math.Vector;
+import engine.logic.Main;
 import engine.objects.Camera;
 import engine.rendering.Renderer;
 import engine.types.World;

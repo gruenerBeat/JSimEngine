@@ -95,7 +95,7 @@ public class RayTracing extends Renderer {
                             }
                         }
                         if(didHit) {
-                            rays[x][y].hitColor = Color.add(rays[x][y].hitColor, hitColor.mul(i));
+                            rays[x][y].hitColor = Color.add(rays[x][y].hitColor, hitColor.mul(1));
                         } else {
                             rays[x][y].trace = false;
                         }
@@ -163,7 +163,7 @@ public class RayTracing extends Renderer {
                     if(object.hasProperty(PropertyType.SPHERE_RENDERER)) {
                         double r = ((SphereRenderer)object.findProperty(PropertyType.SPHERE_RENDERER)).radius;
                         Vector position = object.transform().getPosition();
-                        Color sphereColor = ((SphereRenderer)object.findProperty(PropertyType.SPHERE_RENDERER)).color;
+                        Color sphereColor = ((SphereRenderer)object.findProperty(PropertyType.SPHERE_RENDERER)).material.color;
 
                         double a = rays[x][y].direction.magnitude() * rays[x][y].direction.magnitude();
                         double b = 2 *  Vector.dot(rays[x][y].direction, Vector.sub(rays[x][y].origin, position));
