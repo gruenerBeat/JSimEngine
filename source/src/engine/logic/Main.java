@@ -8,6 +8,7 @@ import engine.logic.serverside.GameClock;
 import engine.networking.NetworkMode;
 import engine.networking.client.Client;
 import engine.networking.client.ServerInfo;
+import engine.objects.Camera;
 import engine.rendering.RenderType;
 import engine.rendering.Renderer;
 import engine.types.GameInitializer;
@@ -51,9 +52,10 @@ public class Main {
         Game game = new Game();
         GameInitializer gi = game.register();
         name = gi.name;
+        gameId = gi.gameId;
 
-        RenderClock rendererClock = new RenderClock(renderer);
-        GameClock gameClock = new GameClock();
+        RenderClock rendererClock;
+        GameClock gameClock;
 
         if(gi.networkMode == NetworkMode.CLIENT) {
 
@@ -62,6 +64,7 @@ public class Main {
 
             renderer = initRenderer(rendering, gi.screenWidth, gi.screenHeight);
             window = GameWindow.getInstance(name, gi.screenWidth, gi.screenHeight);
+            rendererClock = new RenderClock(renderer);
 
             client = new Client(new ServerInfo(gi.serverAddress, gi.serverPort), gameId, gi.clientName);
 
@@ -76,6 +79,7 @@ public class Main {
 
             targetTPS = gi.targetTPS;
             World.changeWorld(gi.world);
+            gameClock = new GameClock();
 
             game.init();
             running = true;
@@ -86,9 +90,16 @@ public class Main {
             rendering = gi.rt;
             targetFPS = gi.targetFPS;
             targetTPS = gi.targetTPS;
+            World.changeWorld(gi.world);
+
+            Camera mainCam = new Camera("Main Cam", gi.fov, gi.screenHeight, gi.screenWidth / gi.screenHeight);
+            World.getCurrent().addObject(mainCam);
+            Camera.changeCamera(mainCam);
 
             renderer = initRenderer(rendering, gi.screenWidth, gi.screenHeight);
             window = GameWindow.getInstance(name, gi.screenWidth, gi.screenHeight);
+            rendererClock = new RenderClock(renderer);
+            gameClock = new GameClock();
 
             game.init();
             running = true;

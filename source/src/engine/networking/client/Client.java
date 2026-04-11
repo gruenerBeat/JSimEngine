@@ -24,7 +24,7 @@ public class Client {
         try {
             socket = new DatagramSocket();
 
-            String payload = "JSE_" + gameId + "#" + clientName + "@" + server.address.getHostAddress() + ":CONREQ";
+            String payload = "JSE_" + gameId + "#" + clientName + "" + "@" + server.address.getHostAddress() + ":CONREQ";
 
             byte[] buffer = payload.getBytes();
 

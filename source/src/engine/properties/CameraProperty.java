@@ -43,14 +43,11 @@ public class CameraProperty extends Property{
     }
 
     public Matrix getProjectionMatrix() {
-        double value[][] = {
-            {focalLength, 0, (sensorDimension * aspectRatio) / 2},
+        return new Matrix(new double[][]{
+            {focalLength, 0, sensorDimension * aspectRatio / 2},
             {0, focalLength, sensorDimension / 2},
-            {0, 0, 1}
-        };
-        Matrix out = new Matrix(3, 3);
-        out.val = value;
-        return out;
+            {0, 0, 1},
+        }, 3, 3);
     }
 
     public void lookAt(Vector pos) {
