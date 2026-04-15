@@ -24,8 +24,6 @@ public class RenderClock extends Thread {
             try {
                 if(Main.getTargetFPS() <= Main.getActualFPS()) {
                     Thread.sleep((int)(1000 / Main.getTargetFPS()));
-                } else {
-                    Thread.sleep((int)((1000 * Main.getActualFPS()) / Math.pow(Main.getTargetFPS(), 2)));
                 }
             } catch (InterruptedException e) {}
 

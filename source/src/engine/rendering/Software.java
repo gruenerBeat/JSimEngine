@@ -1,10 +1,12 @@
 package engine.rendering;
 
 import engine.libs.math.Vector;
+import engine.libs.types.Mesh;
 import engine.libs.types.Texture;
-import engine.libs.types.Color.Color;
+import engine.objects.Camera;
 import engine.properties.CameraProperty;
 import engine.properties.PropertyType;
+import engine.properties.renderers.MeshRenderer;
 import engine.rendering.Utils.Triangle;
 import engine.types.Object;
 import engine.types.World;
@@ -29,128 +31,44 @@ public class Software extends Renderer {
     }
     
     @Override
-    public void setup(Object cam, World world) {
-        // TODO Auto-generated method stub
-        
-    }
+    public void setup(Object cam, World world) {}
 
     @Override
     public Texture render(Object cam, World world) {
         assert cam.hasProperty(PropertyType.CAMERA) : "Object isn't a camera.";
         Texture texture = new Texture(width, height);
 
-        CameraProperty camProp = ((CameraProperty)cam.findProperty(PropertyType.CAMERA));
+        CameraProperty camProp = ((Camera)cam).camera();
 
-        Triangle[] tris = {
-            new Triangle(
-                new Vector(new double[]{-1, -1, 1}),
-                new Vector(new double[]{1, -1, 1}),
-                new Vector(new double[]{1, 1, 1}),
-                new Color(255, 0, 0)
-            ),
-            new Triangle(
-                new Vector(new double[]{1, 1, 1}),
-                new Vector(new double[]{-1, 1, 1}),
-                new Vector(new double[]{-1, -1, 1}),
-                new Color(0, 255, 0)
-            ),
-            new Triangle(
-                new Vector(new double[]{1, 1, 1}),
-                new Vector(new double[]{1, 1, -1}),
-                new Vector(new double[]{1, -1, -1}),
-                new Color(0, 0, 255)
-            ),
-            new Triangle(
-                new Vector(new double[]{1, -1, -1}),
-                new Vector(new double[]{1, -1, 1}),
-                new Vector(new double[]{1, 1, 1}),
-                new Color(255, 255, 0)
-            ),
-            new Triangle(
-                new Vector(new double[]{1, 1, 1}),
-                new Vector(new double[]{1, 1, -1}),
-                new Vector(new double[]{-1, 1, -1}),
-                new Color(0, 255, 255)
-            ),
-            new Triangle(
-                new Vector(new double[]{-1, 1, -1}),
-                new Vector(new double[]{-1, 1, 1}),
-                new Vector(new double[]{1, 1, 1}),
-                new Color(255, 0, 255)
-            ),
-            new Triangle(
-                new Vector(new double[]{-1, 1, 1}),
-                new Vector(new double[]{-1, 1, -1}),
-                new Vector(new double[]{-1, -1, -1}),
-                new Color(255, 255, 255)
-            ),
-            new Triangle(
-                new Vector(new double[]{-1, -1, -1}),
-                new Vector(new double[]{-1, -1, 1}),
-                new Vector(new double[]{-1, 1, 1}),
-                new Color(127, 255, 0)
-            ),
-            new Triangle(
-                new Vector(new double[]{1, -1, 1}),
-                new Vector(new double[]{1, -1, -1}),
-                new Vector(new double[]{1, -1, -1}),
-                new Color(0, 255, 127)
-            ),
-            new Triangle(
-                new Vector(new double[]{1, -1, -1}),
-                new Vector(new double[]{-1, -1, 1}),
-                new Vector(new double[]{1, -1, 1}),
-                new Color(255, 127, 0)
-            ),
-            new Triangle(
-                new Vector(new double[]{-1, -1, -1}),
-                new Vector(new double[]{1, -1, -1}),
-                new Vector(new double[]{1, 1, -1}),
-                new Color(255, 0, 127)
-            ),
-            new Triangle(
-                new Vector(new double[]{1, 1, -1}),
-                new Vector(new double[]{-1, 1, -1}),
-                new Vector(new double[]{-1, -1, -1}),
-                new Color(0, 127, 255)
-            )
-        };
+        for(int i = 0; i < world.getObjects().size(); i++) {
+            Object obj = world.getObjects().get(i);
 
-        for(int i = 0; i < tris.length; i++) {
+            if(obj.hasProperty(PropertyType.MESH_RENDERER)) {
+                Mesh mesh = ((MeshRenderer)obj.findProperty(PropertyType.MESH_RENDERER)).getMeshInWorld();
 
-            Triangle twoDimensional = tris[i];
+                for(int j = 0; j <  mesh.tris.length; j++) {
 
-            System.out.println(twoDimensional.A.toString());
-            System.out.println(twoDimensional.B.toString());
-            System.out.println(twoDimensional.C.toString());
+                    Triangle twoDimensional = mesh.tris[j];
 
-            twoDimensional.transform(camProp.getLocalToWorldMatrix().inverse());
+                    twoDimensional = twoDimensional.transform(camProp.getWorldToLocalTransformation()).project(camProp.getProjectionMatrix());
 
-            System.out.println(twoDimensional.A.toString());
-            System.out.println(twoDimensional.B.toString());
-            System.out.println(twoDimensional.C.toString());
+                    int lowerXBound = Math.clamp(Math.min(Math.min((int)twoDimensional.A.val[0], (int)twoDimensional.B.val[0]), (int)twoDimensional.C.val[0]), 0, width);
+                    int upperXBound = Math.clamp(Math.max(Math.max((int)twoDimensional.A.val[0], (int)twoDimensional.B.val[0]), (int)twoDimensional.C.val[0]), 0, width);
+                    int lowerYBound = Math.clamp(Math.min(Math.min((int)twoDimensional.A.val[1], (int)twoDimensional.B.val[1]), (int)twoDimensional.C.val[1]), 0, height);
+                    int upperYBound = Math.clamp(Math.max(Math.max((int)twoDimensional.A.val[1], (int)twoDimensional.B.val[1]), (int)twoDimensional.C.val[1]), 0, height);
 
-            twoDimensional.project(camProp.getProjectionMatrix());
+                    for(int x = lowerXBound; x < upperXBound; x++) {
+                        for(int y = lowerYBound; y < upperYBound; y++) {
+                            
+                            Vector P = new Vector(new double[]{x, y});
 
-            System.out.println(twoDimensional.A.toString());
-            System.out.println(twoDimensional.B.toString());
-            System.out.println(twoDimensional.C.toString());
+                            if(inTriangle(P, twoDimensional)) {
 
-            int lowerXBound = Math.clamp(Math.min(Math.min((int)twoDimensional.A.val[0], (int)twoDimensional.B.val[0]), (int)twoDimensional.C.val[0]), 0, width -1);
-            int upperXBound = Math.clamp(Math.max(Math.max((int)twoDimensional.A.val[0], (int)twoDimensional.B.val[0]), (int)twoDimensional.C.val[0]), 0, width -1);
-            int lowerYBound = Math.clamp(Math.min(Math.min((int)twoDimensional.A.val[1], (int)twoDimensional.B.val[1]), (int)twoDimensional.C.val[1]), 0, height -1);
-            int upperYBound = Math.clamp(Math.max(Math.max((int)twoDimensional.A.val[1], (int)twoDimensional.B.val[1]), (int)twoDimensional.C.val[1]), 0, height -1);
-
-            for(int x = 0; x < width; x++) {
-                for(int y = 0; y < height; y++) {
-                    
-                    Vector P = new Vector(new double[]{x, y});
-
-                    if(inTriangle(P, twoDimensional)) {
-
-                        texture.setPixelAt(x, y, twoDimensional.color);
+                                texture.setPixelAt(x, y, twoDimensional.color);
+                            }
+                        }   
                     }
-                }   
+                }
             }
         }
 
@@ -158,10 +76,7 @@ public class Software extends Renderer {
     }
 
     @Override
-    public void update(Object cam, World world) {
-        // TODO Auto-generated method stub
-        
-    }
+    public void update(Object cam, World world) {}
 
     private boolean inTriangle(Vector P, Triangle tri) {
 

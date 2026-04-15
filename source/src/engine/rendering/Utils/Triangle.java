@@ -27,23 +27,28 @@ public class Triangle {
         this.color = color;
     }
 
-    public Triangle transform(Matrix transform) {
+    public Triangle transform(Matrix transformation) {
         Vector AHom = HomogenousCoords.toHomCoords(A, 1);
         Vector BHom = HomogenousCoords.toHomCoords(B, 1);
         Vector CHom = HomogenousCoords.toHomCoords(C, 1);
-        A = HomogenousCoords.toNormCoords(transform.act(AHom));
-        B = HomogenousCoords.toNormCoords(transform.act(BHom));
-        C = HomogenousCoords.toNormCoords(transform.act(CHom));
-        return this;
+
+        return new Triangle(
+            HomogenousCoords.toNormCoords(transformation.act(AHom)),
+            HomogenousCoords.toNormCoords(transformation.act(BHom)),
+            HomogenousCoords.toNormCoords(transformation.act(CHom)),
+            color
+        );
     }
 
     public Triangle project(Matrix projection) {
-        A = projection.act(A);
-        B = projection.act(B);
-        C = projection.act(C);
-        A = new Vector(new double[]{A.val[0], A.val[1]});
-        B = new Vector(new double[]{B.val[0], B.val[1]});
-        C = new Vector(new double[]{C.val[0], C.val[1]});
-        return this;
+        Vector projA = Vector.mul(projection.act(A), 1 / A.val[2]);
+        Vector projB = Vector.mul(projection.act(B), 1 / B.val[2]);
+        Vector projC = Vector.mul(projection.act(C), 1 / C.val[2]);
+        return new Triangle(
+            new Vector(new double[]{projA.val[0], projA.val[1]}),
+            new Vector(new double[]{projB.val[0], projB.val[1]}),
+            new Vector(new double[]{projC.val[0], projC.val[1]}),
+            color
+        );
     }
 }

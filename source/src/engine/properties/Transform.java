@@ -81,6 +81,16 @@ public class Transform extends Property{
         }, 4, 4);
     }
 
+    public void lookAt(Vector pos) {
+        Vector newZ = Vector.sub(pos, getParent().transform().getPosition()).normalized(1);
+        Vector newX = Vector.cross3(newZ, Transform.up).normalized(1);
+        Vector newY = Vector.cross3(newX, newZ).normalized(1);
+
+        getParent().transform().setxVector(newX);
+        getParent().transform().setyVector(newY);
+        getParent().transform().setzVector(newZ);
+    }
+
     @Override
     public String pack() {
         String propertyString = "{" + "\"" + getName() + "\"" + "," + getType().toString() + "," + getId() + ",[";

@@ -1,6 +1,7 @@
 package engine.objects;
 
 import engine.types.Object;
+import engine.types.Property;
 import engine.properties.CameraProperty;
 import engine.properties.PropertyType;
 import engine.properties.Transform;
@@ -9,8 +10,8 @@ public class Camera extends Object{
     
     private static Object current;
 
-    public static Object getCurrent() {
-        return current;
+    public static Camera getCurrent() {
+        return ((Camera)current);
     }
 
     public static void changeCamera(Object cam) {
@@ -18,9 +19,20 @@ public class Camera extends Object{
         current = cam;
     }
 
-    public Camera(String name, double fov, int sensorDimension, double aspectRatio) {
+    public Camera(String name, double fov, double sensorDimension, int width, int height) {
         super(name);
         addProperty(new Transform());
-        addProperty(new CameraProperty(fov, sensorDimension, aspectRatio));
+        addProperty(new CameraProperty(fov, width, height, sensorDimension));
+    }
+
+    public CameraProperty camera() {
+        return ((CameraProperty)findProperty(PropertyType.CAMERA));
+    }
+
+    @Override
+    @Deprecated
+    public Property findProperty(PropertyType type) {
+        // TODO Auto-generated method stub
+        return super.findProperty(type);
     }
 }

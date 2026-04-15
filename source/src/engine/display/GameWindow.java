@@ -3,14 +3,18 @@ package engine.display;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import engine.libs.math.Trig;
+import engine.libs.math.Vector;
 import engine.libs.types.Texture;
-
+import engine.objects.Camera;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.stream.IntStream;
 
-public class GameWindow extends JFrame {
+public class GameWindow extends JFrame{
 
     private static GameWindow gameWindow;
 

@@ -9,19 +9,31 @@ public class CameraProperty extends Property{
 
     private double fov;
     private double focalLength;
-    private int sensorDimension;
+    private double sensorDimension;
     private double aspectRatio;
+    private int width;
+    private int height;
 
-    public CameraProperty(double fov, int sensorDimension, double aspectRatio) {
+    public CameraProperty(double fov, int width, int height, double sensorDimension) {
         this.fov = fov;
         this.sensorDimension = sensorDimension;
-        this.aspectRatio = aspectRatio;
-        focalLength = (sensorDimension / 2) * Trig.cot(fov / 2);
+        this.width = width;
+        this.height = height;
+        this.aspectRatio = width / height;
+        focalLength = (sensorDimension / 2) * Trig.cot(Trig.degreeToRad(fov) / 2);
         super("Camera", PropertyType.CAMERA);
     }
 
-    public double getFovl() {
+    public double getFov() {
         return fov;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public double getFocalLength() {
@@ -32,22 +44,26 @@ public class CameraProperty extends Property{
         return aspectRatio;
     }
 
+    public double getSensorDimension() {
+        return sensorDimension;
+    }
+
     public void updateFov(double fov) {
         this.fov = fov;
         focalLength = (sensorDimension / 2) * Trig.cot(Trig.degreeToRad(fov) / 2);
     }
 
-    public Matrix getLocalToWorldMatrix() {
-        assert getParent().hasProperty(PropertyType.TRANSFORM) : "Parent object doesn't have a transform";
-        return getParent().transform().getWorldToLocalMatrix().inverse();
+    public Matrix getProjectionMatrix() {
+        double pixelDensity = height / sensorDimension;
+        return new Matrix(new double[][]{
+            {focalLength * pixelDensity, 0, width / 2},
+            {0, focalLength * pixelDensity, height / 2},
+            {0, 0, 1}
+        }, 3, 3);
     }
 
-    public Matrix getProjectionMatrix() {
-        return new Matrix(new double[][]{
-            {focalLength, 0, sensorDimension * aspectRatio / 2},
-            {0, focalLength, sensorDimension / 2},
-            {0, 0, 1},
-        }, 3, 3);
+    public Matrix getWorldToLocalTransformation() {
+        return getParent().transform().getWorldToLocalMatrix();
     }
 
     public void lookAt(Vector pos) {
